@@ -1,87 +1,119 @@
 # WLED (RGB+CCT color fix)
 
-Angepasste Kopie der offiziellen **WLED-Integration** aus Home Assistant, damit Streifen mit
-RGB **und** Weiß **und** Farbtemperatur (z. B. FW1906, RGBCCT) ihre Farbe in Home Assistant
-korrekt anzeigen und aktualisieren.
-
-> **English:** A patched copy of the official Home Assistant WLED integration for strips that
-> report RGB **and** white **and** color temperature (for example FW1906 / RGBCCT). Without the
-> patch such lights are stuck in `color_temp` mode, so the real RGB color never reaches Home
-> Assistant. See [What is changed](#was-genau-geaendert-wurde).
+A patched copy of the official **WLED integration** from Home Assistant, so that strips
+reporting RGB **and** white **and** color temperature (for example FW1906 / RGBCCT) show and
+update their real color in Home Assistant.
 
 ---
 
-## Das Problem
+## The problem
 
-Meldet ein WLED-Segment die Fähigkeiten RGB + Weiß + Farbtemperatur (`lc: 7`), ordnet Home
-Assistant dem Licht die Farbmodi `[color_temp, rgbw]` zu und nimmt davon den **ersten** als
-aktiven Modus. Das Licht steckt damit dauerhaft in `color_temp`, und Home Assistant leitet die
-angezeigte Farbe aus der Farbtemperatur ab. Ergebnis:
+When a WLED segment reports the capabilities RGB + white + color temperature (`lc: 7`), the
+integration maps it to the color modes `[COLOR_TEMP, RGBW]` and then takes the **first** entry
+as the active color mode:
 
-- `color_mode` bleibt `color_temp`, `rgbw_color` ist `null`
-- die tatsächliche Farbe kommt nie in Home Assistant an, die Anzeige wirkt eingefroren
-- Farbänderungen in der WLED-Oberfläche sind in Home Assistant nicht sichtbar
+```python
+# light.py
+self._attr_color_mode = color_modes[0]
+self._attr_supported_color_modes = set(color_modes)
+```
 
-Befehle von Home Assistant an WLED funktionieren, nur der Rückweg ist betroffen.
+So the light is permanently in `color_temp`. Home Assistant then derives the displayed color
+from the color temperature, and the actual RGB value never arrives:
 
-## Was genau geändert wurde
+- `color_mode` stays `color_temp`, `rgbw_color` is `null`
+- `rgb_color` is a near-white value computed from the temperature and barely changes
+- color changes made in the WLED web UI are not visible in Home Assistant
 
-Die Integration ist eine **1:1-Kopie aus Home Assistant 2026.6.4** mit zwei Änderungen:
+Commands from Home Assistant to WLED work fine, only the way back is affected. The raw device
+data is correct as well: `http://<wled-ip>/json/state` reports the right values in `seg[].col`.
 
-| Datei | Änderung |
-|---|---|
-| `const.py` | Im `LIGHT_CAPABILITIES_COLOR_MODE_MAPPING` steht für RGB + Weiß + Farbtemperatur jetzt `[RGBW, COLOR_TEMP]` statt `[COLOR_TEMP, RGBW]`. Damit ist `rgbw` der aktive Farbmodus und die Farbe wird durchgereicht. `color_temp` bleibt weiterhin unterstützt. |
-| `light.py` | Neues Attribut `cct_kelvin`, das die Farbtemperatur **immer** ausgibt. Home Assistant setzt `color_temp_kelvin` im `rgbw`-Modus auf `null`, wodurch Oberflächen den Wert sonst nicht anzeigen können. |
+## What was changed
 
-Beide Stellen sind im Code mit `CUSTOM-PATCH` gekennzeichnet.
+This is a **verbatim copy of the WLED integration from Home Assistant 2026.6.4** with two
+changes, both marked with `CUSTOM-PATCH` in the code.
 
-## Installation über HACS
+**1. `const.py` — swap the order of the color modes**
 
-1. HACS öffnen, oben rechts das Menü, **Benutzerdefinierte Repositories**.
-2. Diese Repository-URL eintragen, Kategorie **Integration**, hinzufügen.
-3. „WLED (RGB+CCT color fix)" installieren.
-4. Home Assistant **neu starten**.
+In `LIGHT_CAPABILITIES_COLOR_MODE_MAPPING`, for `RGB_COLOR | WHITE_CHANNEL | COLOR_TEMPERATURE`:
 
-Die Integration verwendet die Domain `wled` und ersetzt dadurch die eingebaute WLED-Integration.
-Deine bestehende Einrichtung, Geräte und Entitäten bleiben erhalten, es ist keine Neuanlage nötig.
-Im Protokoll erscheint der Hinweis „custom integration wled", das ist erwartet und bestätigt,
-dass die angepasste Version aktiv ist.
+```python
+# upstream
+[ColorMode.COLOR_TEMP, ColorMode.RGBW]
+# here
+[ColorMode.RGBW, ColorMode.COLOR_TEMP]
+```
 
-### Prüfen
+Because `light.py` uses `color_modes[0]`, the active mode becomes `rgbw` and the color is passed
+through again. `COLOR_TEMP` stays in `supported_color_modes`, so setting a color temperature
+still works.
 
-Entwicklerwerkzeuge → Zustände → die Light-Entität deines Geräts:
+**2. `light.py` — keep the color temperature readable**
 
-- `color_mode` ist `rgbw` (vorher `color_temp`)
-- `rgbw_color` enthält Werte (vorher `null`) und ändert sich bei Farbwechseln
-- `cct_kelvin` zeigt die aktuelle Farbtemperatur
+Home Assistant clears `color_temp_kelvin` as soon as the active color mode is not `color_temp`.
+With the change above that value would always be `null`, so it is additionally exposed as a
+state attribute:
 
-## Rückgängig machen
+```python
+@property
+def extra_state_attributes(self) -> dict[str, Any] | None:
+    return {"cct_kelvin": self.color_temp_kelvin}
+```
 
-In HACS deinstallieren oder den Ordner `custom_components/wled` löschen, danach Home Assistant
-neu starten. Es greift wieder die eingebaute Integration.
+Nothing else was touched.
 
-## Wichtig bei Home-Assistant-Updates
+### A note on the approach
 
-Diese Kopie ist auf **Home Assistant 2026.6.4** eingefroren. Nach einem größeren Update von Home
-Assistant kann sie veralten, weil sich interne Schnittstellen ändern. Zwei Möglichkeiten:
+This is a workaround, not a proper upstream fix. Home Assistant allows only one active color
+mode at a time, and this simply picks the more useful one for these strips. A real fix would
+select the mode dynamically, based on whether the light currently shows a color or a white
+tone.
 
-- die Integration hier deinstallieren, sobald der Fehler in Home Assistant selbst behoben ist
-- oder auf eine hier veröffentlichte, neuere Version aktualisieren
+## Installation via HACS
 
-Wer nur eine kurzfristige Lösung braucht, kann alternativ in WLED einen LED-Typ ohne
-Farbtemperatur-Kanal wählen, sofern die Hardware das zulässt.
+1. Open HACS, use the menu in the top right corner, **Custom repositories**.
+2. Add this repository URL with category **Integration**.
+3. Install "WLED (RGB+CCT color fix)".
+4. **Restart** Home Assistant.
 
-## Herkunft und Lizenz
+The integration uses the domain `wled` and therefore replaces the built-in one. Your existing
+setup, devices and entities are kept, nothing has to be added again. The log will show a
+"custom integration wled" warning, which is expected and confirms that the patched version is
+active.
 
-Basiert auf der WLED-Integration aus [Home Assistant Core](https://github.com/home-assistant/core)
-(Version 2026.6.4), ursprüngliche Autoren `@frenck` und `@mik-laj`.
+### Verifying
 
-Lizenziert unter der **Apache License 2.0**, siehe [LICENSE](LICENSE). Die oben beschriebenen
-Änderungen an `const.py` und `light.py` wurden gegenüber dem Original vorgenommen.
+Developer tools → States → the light entity of your device:
 
-Dieses Projekt steht in keiner Verbindung zum Home-Assistant-Projekt oder zu WLED.
+- `color_mode` is `rgbw` (was `color_temp`)
+- `rgbw_color` has values (was `null`) and changes when you change the color
+- `cct_kelvin` shows the current color temperature
 
-## Passend dazu
+## Reverting
 
-[WLED Control Card](https://github.com/Si-Al-Ri/wled-control-card), eine Lovelace-Karte zur
-Steuerung von WLED-Geräten, die das Attribut `cct_kelvin` dieser Integration nutzt.
+Uninstall it in HACS or delete the `custom_components/wled` folder, then restart Home Assistant.
+The built-in integration takes over again.
+
+## Home Assistant updates
+
+This copy is frozen on **Home Assistant 2026.6.4**. After a larger Home Assistant update it can
+become outdated, because internal interfaces change. Either uninstall it once the issue is
+fixed in Home Assistant itself, or update to a newer version published here.
+
+If you only need a quick workaround and your hardware allows it, you can also pick a LED type
+without a color temperature channel in WLED.
+
+## Credits and license
+
+Based on the WLED integration from [Home Assistant Core](https://github.com/home-assistant/core)
+(version 2026.6.4), originally written by `@frenck` and `@mik-laj`.
+
+Licensed under the **Apache License 2.0**, see [LICENSE](LICENSE). The changes to `const.py` and
+`light.py` described above were made to the original files.
+
+This project is not affiliated with the Home Assistant project or with WLED.
+
+## Related
+
+[WLED Control Card](https://github.com/Si-Al-Ri/wled-control-card), a Lovelace card for
+controlling WLED devices, which makes use of the `cct_kelvin` attribute from this integration.

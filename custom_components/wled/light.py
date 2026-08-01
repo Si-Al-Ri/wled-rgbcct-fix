@@ -193,11 +193,11 @@ class WLEDSegmentLight(WLEDEntity, LightEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
-        """CUSTOM-PATCH: CCT immer ausgeben (auch wenn color_mode == rgbw).
+        """CUSTOM-PATCH: always expose the color temperature.
 
-        HA setzt color_temp_kelvin auf None, sobald color_mode != color_temp.
-        Damit UIs (z. B. die WLED Control Card) die Farbtemperatur trotzdem
-        anzeigen koennen, liefern wir sie zusaetzlich als cct_kelvin.
+        Home Assistant sets color_temp_kelvin to None whenever the active color
+        mode is not color_temp. Since these lights now run in rgbw, the value
+        would be unavailable to any UI, so it is exposed as cct_kelvin as well.
         """
         return {"cct_kelvin": self.color_temp_kelvin}
 

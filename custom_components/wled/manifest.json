@@ -1,14 +1,20 @@
 {
   "domain": "wled",
   "name": "WLED (RGB+CCT color fix)",
-  "version": "2026.6.4.3",
-  "codeowners": ["@Si-Al-Ri"],
+  "version": "2026.6.4.4",
+  "codeowners": [
+    "@Si-Al-Ri"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/Si-Al-Ri/wled-rgbcct-fix",
   "integration_type": "device",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/Si-Al-Ri/wled-rgbcct-fix/issues",
   "quality_scale": "platinum",
-  "requirements": ["wled==0.23.0"],
-  "zeroconf": ["_wled._tcp.local."]
+  "requirements": [
+    "wled==0.23.0"
+  ],
+  "zeroconf": [
+    "_wled._tcp.local."
+  ]
 }

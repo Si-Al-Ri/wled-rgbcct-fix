@@ -65,10 +65,11 @@ LIGHT_CAPABILITIES_COLOR_MODE_MAPPING: dict[LightCapability, list[ColorMode]] = 
     LightCapability.RGB_COLOR
     | LightCapability.WHITE_CHANNEL
     | LightCapability.COLOR_TEMPERATURE: [
-        # CUSTOM-PATCH: RGBW zuerst -> HA setzt den aktiven Farbmodus auf "rgbw"
-        # und zeigt/aktualisiert die RGB-Farbe. Original: [COLOR_TEMP, RGBW], dann
-        # blieb HA in color_temp und ignorierte RGB. Betrifft RGB+W+CCT-Geraete
-        # (z. B. FW1906). color_temp bleibt unterstuetzt.
+        # CUSTOM-PATCH: order swapped, upstream is [COLOR_TEMP, RGBW].
+        # light.py uses color_modes[0] as the active color mode, so upstream
+        # keeps these lights in color_temp permanently and the real RGB color
+        # never reaches Home Assistant. Affects RGB+White+CCT strips such as
+        # FW1906. COLOR_TEMP remains in supported_color_modes.
         ColorMode.RGBW,
         ColorMode.COLOR_TEMP,
     ],
