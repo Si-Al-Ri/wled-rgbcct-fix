@@ -1,0 +1,167 @@
+{
+    "common": {
+        "unsupported_version": "\ud574\ub2f9 WLED \uae30\uae30\uc758 \ud38c\uc6e8\uc5b4 \ubc84\uc804\uc774 \uc9c0\uc6d0\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\uae30\uae30\uac00 \uc774\ubbf8 \uad6c\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4",
+            "cannot_connect": "\uc5f0\uacb0\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4",
+            "reconfigure_successful": "\uc7ac\uad6c\uc131\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4",
+            "unique_id_mismatch": "MAC \uc8fc\uc18c\uac00 \uad6c\uc131\ub41c \uae30\uae30\uc640 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. MAC \uc8fc\uc18c\uac00 \ub2e4\uc74c\uacfc \uac19\uc740 \uae30\uae30\uc5d0 \uc5f0\uacb0\ud574\uc57c \ud569\ub2c8\ub2e4: `{expected_mac}`, \ud558\uc9c0\ub9cc MAC \uc8fc\uc18c\uac00 \uc788\ub294 \uae30\uae30\uc5d0 \uc5f0\uacb0\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4: `{actual_mac}`.\n\ub3d9\uc77c\ud55c \uae30\uae30\ub97c \uc0ac\uc6a9\ud558\uc5ec \uc7ac\uc124\uc815\uc744 \uc9c4\ud589\ud574 \uc8fc\uc2ed\uc2dc\uc624.",
+            "unsupported_version": "\ud574\ub2f9 WLED \uae30\uae30\uc758 \ud38c\uc6e8\uc5b4 \ubc84\uc804\uc774 \uc9c0\uc6d0\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+        },
+        "error": {
+            "cannot_connect": "\uc5f0\uacb0\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4",
+            "unsupported_version": "\ud574\ub2f9 WLED \uae30\uae30\uc758 \ud38c\uc6e8\uc5b4 \ubc84\uc804\uc774 \uc9c0\uc6d0\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "\ud638\uc2a4\ud2b8"
+                },
+                "data_description": {
+                    "host": "WLED \uae30\uae30\uc758 \ud638\uc2a4\ud2b8 \uc774\ub984 \ub610\ub294 IP \uc8fc\uc18c"
+                },
+                "description": "Home Assistant\uc5d0 WLED \ud1b5\ud569 \uad6c\uc131\uc694\uc18c\ub97c \uc124\uc815\ud569\ub2c8\ub2e4."
+            },
+            "zeroconf_confirm": {
+                "description": "Home Assistant\uc5d0 WLED `{name}`\uc744(\ub97c) \ucd94\uac00\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?",
+                "title": "\ubc1c\uacac\ub41c WLED \uae30\uae30"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "firmware": {
+                "name": "\ud38c\uc6e8\uc5b4"
+            }
+        },
+        "light": {
+            "main": {
+                "name": "\uba54\uc778"
+            },
+            "segment": {
+                "name": "\ubd84\uc808 {segment}"
+            }
+        },
+        "number": {
+            "intensity": {
+                "name": "\uac15\ud568"
+            },
+            "segment_intensity": {
+                "name": "\ubd84\uc808 {segment} \uac15\ud568"
+            },
+            "segment_speed": {
+                "name": "\ubd84\uc808 {segment} \uc18d\ub3c4"
+            },
+            "speed": {
+                "name": "\uc18d\ub3c4"
+            }
+        },
+        "select": {
+            "color_palette": {
+                "name": "\uc0c9\uc0c1 \ud314\ub808\ud2b8"
+            },
+            "live_override": {
+                "name": "\uc2e4\uc2dc\uac04 \uc7ac\uc815\uc758",
+                "state": {
+                    "0": "\uaebc\uc9d0",
+                    "1": "\ucf1c\uc9d0",
+                    "2": "\uae30\uae30\uac00 \ub2e4\uc2dc \uc2dc\uc791\ub420 \ub54c\uae4c\uc9c0"
+                }
+            },
+            "playlist": {
+                "name": "\uc7ac\uc0dd \ubaa9\ub85d"
+            },
+            "preset": {
+                "name": "\ud504\ub9ac\uc14b"
+            },
+            "segment_color_palette": {
+                "name": "\ubd84\uc808 {segment} \uc0c9\uc0c1 \ud314\ub808\ud2b8"
+            }
+        },
+        "sensor": {
+            "estimated_current": {
+                "name": "\uc608\uc0c1 \uc804\ub958"
+            },
+            "free_heap": {
+                "name": "\uc0ac\uc6a9 \uac00\ub2a5\ud55c \uba54\ubaa8\ub9ac"
+            },
+            "info_leds_count": {
+                "name": "LED \uac1c\uc218",
+                "unit_of_measurement": "LED"
+            },
+            "info_leds_max_power": {
+                "name": "\ucd5c\ub300 \uc804\ub958"
+            },
+            "ip": {
+                "name": "IP"
+            },
+            "wifi_bssid": {
+                "name": "Wi-Fi BSSID"
+            },
+            "wifi_channel": {
+                "name": "Wi-Fi \ucc44\ub110"
+            },
+            "wifi_rssi": {
+                "name": "Wi-Fi RSSI"
+            },
+            "wifi_signal": {
+                "name": "Wi-Fi \uc2e0\ud638"
+            }
+        },
+        "switch": {
+            "freeze": {
+                "name": "\uaf2d \ub9e4\ub2ec\ub9ac\uac8c \ud558\ub2e4"
+            },
+            "nightlight": {
+                "name": "\uc57c\uac04 \uc870\uba85"
+            },
+            "reverse": {
+                "name": "\ub4a4\uc9d1\ub2e4"
+            },
+            "segment_freeze": {
+                "name": "\ubd84\uc808 {segment} \uaf2d \ub9e4\ub2ec\ub9ac\uac8c \ud558\ub2e4"
+            },
+            "segment_reverse": {
+                "name": "\ubd84\uc808 {segment} \ub4a4\uc9d1\ub2e4"
+            },
+            "sync_receive": {
+                "name": "\ub3d9\uae30\ud654 \uc218\uc2e0"
+            },
+            "sync_send": {
+                "name": "\ub3d9\uae30\ud654 \ubcf4\ub0b4\uae30"
+            }
+        }
+    },
+    "exceptions": {
+        "connection_error": {
+            "message": "WLED API\uc640\uc758 \ud1b5\uc2e0\uc5d0 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4. {error}"
+        },
+        "invalid_response_github_error": {
+            "message": "GitHub API\uc5d0\uc11c \uc798\ubabb\ub41c \uc751\ub2f5\uc774 \uc218\uc2e0\ub418\uc5c8\uc2b5\ub2c8\ub2e4. {error}"
+        },
+        "invalid_response_wled_error": {
+            "message": "WLED API\uc5d0\uc11c \uc798\ubabb\ub41c \uc751\ub2f5\uc774 \uc218\uc2e0\ub418\uc5c8\uc2b5\ub2c8\ub2e4. {error}"
+        },
+        "mac_address_mismatch": {
+            "message": "MAC \uc8fc\uc18c\uac00 \uad6c\uc131\ub41c \uae30\uae30\uc640 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ub2e4\uc74c MAC \uc8fc\uc18c\ub97c \uac00\uc9c4 \uae30\uae30\uc5d0 \uc5f0\uacb0\ud574\uc57c \ud569\ub2c8\ub2e4. {expected_mac}\ud558\uc9c0\ub9cc MAC \uc8fc\uc18c\uac00 \uc788\ub294 \uae30\uae30\uc5d0 \uc5f0\uacb0\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4. {actual_mac}."
+        },
+        "unsupported_version": {
+            "message": "\ud574\ub2f9 WLED \uae30\uae30\uc758 \ud38c\uc6e8\uc5b4 \ubc84\uc804\uc774 \uc9c0\uc6d0\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. {error}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "keep_master_light": "1\uac1c\uc758 LED \uc138\uadf8\uba3c\ud2b8\ub85c\ub3c4 \uc8fc \uc870\uba85\uc744 \uc720\uc9c0\ud569\ub2c8\ub2e4."
+                },
+                "data_description": {
+                    "keep_master_light": "\uc790\ub3d9\ud654\ub97c \ud1b5\ud574 \uc138\uadf8\uba3c\ud2b8\ub97c \ub3d9\uc801\uc73c\ub85c \ucd94\uac00 \ubc0f \uc81c\uac70\ud560 \ub54c\uc5d0\ub3c4 \uba54\uc778 \uc870\uba85 \uc81c\uc5b4 \uae30\ub2a5\uc744 \ud56d\uc0c1 \uc0ac\uc6a9\ud560 \uc218 \uc788\ub3c4\ub85d \ubcf4\uc7a5\ud569\ub2c8\ub2e4."
+                }
+            }
+        }
+    }
+}
